@@ -1,60 +1,55 @@
 import numpy as np
 from matplotlib import image
-from matplotlib import pyplot as plt
+import operations as op
 
-img = image.imread('src\images\dog1.jpg')
+# Loading image
+img = image.imread('images\dog1.jpg')
+print(f'Original image shape: {img.shape}')
 
-split_freq = 40
-cropped = img[0:1120, 0:1600]
-print(cropped.shape)
-# lst=[]
-#
-lst = np.hsplit(cropped, split_freq)
-indexes1 = []
-indexes2 = []
+# Rounding image size to tens
+original_img_height = img.shape[0]
+original_img_width = img.shape[1]
+rounded_img_height = (original_img_height // 10) * 10
+rounded_img_width = (original_img_width // 10) * 10
 
-for i in range(split_freq):
-    if i % 2 == 0:
-        indexes1.append(i)
+# Determining nearest image size for eligible shred sizes for suitable image quality representation
+eligible_divisors = False
+while not eligible_divisors:
+    common_divisors = []
+
+    for i in range(10, min(rounded_img_height, rounded_img_width), 2):
+        if rounded_img_height % i == 0 and rounded_img_width % i == 0:
+            common_divisors.append(i)
+
+    if common_divisors[-1] < 30:
+        rounded_img_height -= 10
     else:
-        indexes2.append(i)
-arr = np.array(lst)
+        eligible_divisors = True
 
-test1 = arr[indexes1]
-test2 = arr[indexes2]
+# Cropping image to determined size
+cropped_img = img[0:rounded_img_height, 0:rounded_img_width]
 
-breed1 = np.concatenate((test1), axis=1)
-breed2 = np.concatenate((test2), axis=1)
+# Setting up shredding frequency
+shred_freq = common_divisors[-1]
 
-twobreeds = np.concatenate((breed1, breed2), axis=1)
+print(f'Cropped image shape: {cropped_img.shape}')
+print(f'Common divisors: {common_divisors}')
+print(f'Shred frequency: {shred_freq}')
 
-lst_of_vertical_split = np.vsplit(twobreeds, split_freq)
-arr1 = np.array(lst_of_vertical_split)
+titles = ['Original image', 'Cropped image',
+          'Result of first shredding, splitting and gluing',
+          'Final result of shredding, splitting and gluing']
 
-test3 = arr1[indexes1]
-test4 = arr1[indexes2]
+# Display original size and cropped image
+op.display_image(img, titles[0], 10)
+op.display_image(cropped_img, titles[1], 10)
 
-breed3 = np.concatenate(test3, axis=0)
-breed4 = np.concatenate(test4, axis=0)
+# Shredding, splitting, gluing and displaying cropped image
+first_shred = op.shredding_splitting_gluing(cropped_img, shred_freq, 1, np.hsplit)
+op.display_image(first_shred, titles[2], 10)
 
-fourbreeds = np.concatenate((breed3, breed4), axis=1)
+# Shredding, splitting, gluing and displaying glued image
+second_shred = op.shredding_splitting_gluing(first_shred, shred_freq, 0, np.vsplit)
+op.display_image(second_shred, titles[3], 10)
 
-
-print(twobreeds.shape)
-
-# print(breed1.shape)
-# print(breed1.shape)
-
-
-# revers = lst[::-1]
-# one = lst[0:1]
-# plt.imshow(np.concatenate((test4), axis=0))
-# breed2 = plt.imshow(np.concatenate((test2), axis=1))
-
-plt.imshow(fourbreeds)
-
-print(fourbreeds.shape)
-
-plt.show()
-
-# print(type(lst))
+print(f'Final shape after shredding: {second_shred.shape}')
