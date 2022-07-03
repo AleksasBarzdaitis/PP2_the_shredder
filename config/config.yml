@@ -1,0 +1,12 @@
+options:
+    version: 1
+    display_quality:
+#      low
+      medium
+#      high
+    images:
+#      'images\Abstract.jpg'
+#      'images\Baby1.jpg'
+      'images\Dog1.jpg'
+#      'images\Flower1.jpg'
+#      'images\Woman1.jpg'
