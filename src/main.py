@@ -2,6 +2,10 @@ import numpy as np
 import yaml
 from matplotlib import image
 import shredder_actions as sa
+import os
+
+while os.getcwd().split('\\')[-1] != "PP2_the_shredder":
+    os.chdir('..')
 
 # Loading image from config file
 with open('.\config\config.yml', 'r') as config:
