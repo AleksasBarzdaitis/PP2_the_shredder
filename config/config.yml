@@ -10,3 +10,7 @@ options:
       'images\Dog1.jpg'
 #      'images\Flower1.jpg'
 #      'images\Woman1.jpg'
+    titles:
+      [ 'Original image', 'Cropped image',
+        'Result of first shredding, splitting and gluing',
+        'Final result of shredding, splitting and gluing' ]

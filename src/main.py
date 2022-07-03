@@ -9,6 +9,11 @@ with open('.\config\config.yml', 'r') as config:
     loaded_image = options['images']
 img = image.imread(loaded_image)
 
+# Loading display titles
+with open('.\config\config.yml', 'r') as config:
+    options = yaml.safe_load(config)['options']
+    titles = options['titles']
+
 print(f'Original image shape: {img.shape}')
 
 # Rounding image size to tens
@@ -50,10 +55,6 @@ elif quality_selected == 'high':
 print(f'Cropped image shape: {cropped_img.shape}')
 print(f'Common divisors: {common_divisors}')
 print(f'Shred frequency: {shred_freq}')
-
-titles = ['Original image', 'Cropped image',
-          'Result of first shredding, splitting and gluing',
-          'Final result of shredding, splitting and gluing']
 
 # Display original size and cropped image
 sa.display_image(img, titles[0], 5)
