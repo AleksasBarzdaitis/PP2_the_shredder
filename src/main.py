@@ -29,7 +29,7 @@ while not eligible_divisors:
     for i in range(10, min(rounded_img_height, rounded_img_width), 2):
         if rounded_img_height % i == 0 and rounded_img_width % i == 0:
             common_divisors.append(i)
-    if common_divisors[-1] < 30:
+    if common_divisors[-1] < 40:
         rounded_img_height -= 10
     else:
         eligible_divisors = True

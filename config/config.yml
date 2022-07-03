@@ -2,13 +2,14 @@ options:
     version: 1
     display_quality:
 #      low
-      medium
-#      high
+#      medium
+      high
     images:
-#      'images\Abstract.jpg'
+#      'images\Abstract1.jpg'
 #      'images\Baby1.jpg'
-      'images\Dog1.jpg'
-#      'images\Flower1.jpg'
+#      'images\Dog1.jpg'
+      'images\Flower1.jpg'
+#      'images\Shredder1.jpg'
 #      'images\Woman1.jpg'
     titles:
       [ 'Original image', 'Cropped image',
