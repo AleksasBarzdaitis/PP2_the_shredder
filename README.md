@@ -15,6 +15,7 @@ The Shredder is an example of possibility to multiply images from one, by cuttin
 ### Important
 
 - Application will not work if more then one selection of either image or display quality is uncommented
+- Do not change project directory's name!
 
 ### Note
 
