@@ -1,8 +1,11 @@
 import numpy as np
 import yaml
 from matplotlib import image
-import shredder_actions as sa
 import os
+import shredder_actions as sa
+import image_processing as ip
+import shredder as sh
+import dev_prints as dp
 
 while os.getcwd().split('\\')[-1] != "PP2_the_shredder":
     os.chdir('..')
@@ -18,8 +21,6 @@ with open('.\config\config.yml', 'r') as config:
     options = yaml.safe_load(config)['options']
     titles = options['titles']
 
-print(f'Original image shape: {img.shape}')
-
 # Rounding image size to tens
 original_img_height = img.shape[0]
 original_img_width = img.shape[1]
@@ -27,49 +28,29 @@ rounded_img_height = (original_img_height // 10) * 10
 rounded_img_width = (original_img_width // 10) * 10
 
 # Determining nearest image size for eligible shred sizes for suitable image quality representation
-eligible_divisors = False
-while not eligible_divisors:
-    common_divisors = []
-    for i in range(10, min(rounded_img_height, rounded_img_width), 2):
-        if rounded_img_height % i == 0 and rounded_img_width % i == 0:
-            common_divisors.append(i)
-    if common_divisors[-1] < 40:
-        rounded_img_height -= 10
-    else:
-        eligible_divisors = True
+shred_sizes, height, width = ip.image_size_det(rounded_img_height, rounded_img_width)
 
 # Cropping image to determined size
-cropped_img = img[0:rounded_img_height, 0:rounded_img_width]
+cropped_img = img[0:height, 0:width]
 
-# Setting up The Shredder
 # Loading config file to get size of shreds (shredded and glued image quality)
 with open('.\config\config.yml', 'r') as config:
     options = yaml.safe_load(config)['options']
     quality_selected = options['display_quality']
 
-print(f'Shredded image quality selected: {quality_selected}')
-
-if quality_selected == 'low':
-    shred_freq = common_divisors[0]
-elif quality_selected == 'medium':
-    shred_freq = common_divisors[len(common_divisors) // 2]
-elif quality_selected == 'high':
-    shred_freq = common_divisors[-1]
-
-print(f'Cropped image shape: {cropped_img.shape}')
-print(f'Common divisors: {common_divisors}')
-print(f'Shred frequency: {shred_freq}')
+# Setting up The Shredder
+shred_size = sh.shred_size(shred_sizes, quality_selected)
 
 # Display original size and cropped image
 sa.display_image(img, titles[0], 5)
 sa.display_image(cropped_img, titles[1], 5)
 
 # Shredding vertically, splitting, gluing and displaying cropped image
-first_shred = sa.shredding_splitting_gluing(cropped_img, shred_freq, 1, np.hsplit)
+first_shred = sa.shredding_splitting_gluing(cropped_img, shred_size, 1, np.hsplit)
 sa.display_image(first_shred, titles[2], 10)
 
 # Shredding horizontally, splitting, gluing and displaying glued image
-second_shred = sa.shredding_splitting_gluing(first_shred, shred_freq, 0, np.vsplit)
+second_shred = sa.shredding_splitting_gluing(first_shred, shred_size, 0, np.vsplit)
 sa.display_image(second_shred, titles[3], 10)
 
-print(f'Final shape after shredding and gluing: {second_shred.shape}')
+# dp.dev_log(img, quality_selected, cropped_img, shred_sizes, shred_size, second_shred)
